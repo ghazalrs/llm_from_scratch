@@ -17,7 +17,7 @@ d_in = inputs.shape[1] # the input embedding size, d=3
 d_out = 2 # the output embedding size, d=2
 
 
-class CausalSelfAttention(nn.Module):
+class CausalAttention(nn.Module):
     def __init__(self, d_in, d_out, qkv_bias=False):
         super().__init__()
 
@@ -50,5 +50,5 @@ class CausalSelfAttention(nn.Module):
 
 
 torch.manual_seed(789)
-sa = CausalSelfAttention(d_in=d_in, d_out=d_out)
+sa = CausalAttention(d_in=d_in, d_out=d_out)
 print(sa(inputs))
