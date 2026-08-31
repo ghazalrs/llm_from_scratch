@@ -41,11 +41,33 @@ class DummyTransformerBlock(nn.Module):
         return x
 
 
-class DummyLayerNorm(nn.Module):
-    def __init__(self, normalized_shape, eps=1e-5):
+class LayerNorm(nn.Module):
+    def __init__(self, emb_dim):
         super().__init__()
-        # The parameters here are just to mimic the LayerNorm interface.
+
+        # Small number to prevent division by zero
+        self.eps = 1e-5
+
+        # Learnable multiplier for each feature
+        self.scale = nn.Parameter(torch.ones(emb_dim))
+
+        # Learnable offset for each feature
+        self.shift = nn.Parameter(torch.zeros(emb_dim))
 
     def forward(self, x):
-        # This layer does nothing and just returns its input.
-        return x
+
+        # Mean across features
+        mean = x.mean(dim=-1, keepdim=True)
+
+        # Variance across features
+        var = x.var(
+            dim=-1,
+            keepdim=True,
+            unbiased=False
+        )
+
+        # Normalize to approximately mean=0, variance=1
+        norm_x = (x - mean) / torch.sqrt(var + self.eps)
+
+        # Allow the model to learn how to rescale/reposition features
+        return self.scale * norm_x + self.shift
