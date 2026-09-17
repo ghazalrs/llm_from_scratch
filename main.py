@@ -4,7 +4,7 @@ import torch
 
 from gpt_model import GPTModel
 from loss import calc_loss_loader
-from dataloader import create_dataloader
+from data_loader import create_dataloader
 
 
 GPT_CONFIG_124M = {
