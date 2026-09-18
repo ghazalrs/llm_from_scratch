@@ -1,2 +1,3 @@
 .venv
 model_and_optimizer.pth
+gpt2/
